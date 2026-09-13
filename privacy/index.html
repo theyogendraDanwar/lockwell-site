@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — Lockwell</title>
+    <meta
+      name="description"
+      content="Lockwell privacy policy. Your vault data stays on your device or storage you choose."
+    />
+    <link rel="canonical" href="https://theyogendradanwar.github.io/lockwell-site/privacy/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Source+Sans+3:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+    <header class="top">
+      <a class="brand" href="../">Lockwell</a>
+      <nav>
+        <a href="../privacy/" aria-current="page">Privacy</a>
+      </nav>
+    </header>
+
+    <main class="doc">
+      <h1>Privacy Policy</h1>
+      <p class="meta">Last updated: 2026-03-13</p>
+
+      <p>
+        Lockwell ("the App") is a KeePass-compatible password manager. Your vault
+        data stays on your device or storage you choose.
+      </p>
+      <p>
+        Shown in-app under Settings → About → Privacy Policy.
+      </p>
+      <p>
+        <strong>Support:</strong>
+        <a href="mailto:yogendra.danwar@gmail.com">yogendra.danwar@gmail.com</a>
+      </p>
+
+      <h2>Data we collect</h2>
+      <p>
+        The App does <strong>not</strong> collect personal data on our servers.
+        There is no Lockwell account and no first-party analytics.
+      </p>
+
+      <h2>Data stored on your device</h2>
+      <ul>
+        <li>Password vault files (<code>.kdbx</code>) and entries you create or import.</li>
+        <li>An optional app unlock PIN and biometric preference.</li>
+        <li>App preferences (theme, clipboard timer, etc.).</li>
+        <li>
+          App purchase status via Apple/Google (paid download; handled by the
+          store; we do not receive payment card details).
+        </li>
+        <li>
+          Optional tip purchases via Apple In-App Purchase / Google Play Billing
+          (consumable; unlock no features).
+        </li>
+      </ul>
+      <p>
+        Vault credentials and master passwords are stored encrypted in KeePass
+        format. The app unlock PIN is stored in iOS Keychain / Android Keystore.
+      </p>
+
+      <h2>Network</h2>
+      <p>
+        The App works offline by default. Network is used only when you enable
+        optional features:
+      </p>
+      <ul>
+        <li>
+          <strong>Have I Been Pwned (optional):</strong> when you enable breach
+          checks and run a scan, Lockwell sends only the first five characters of
+          a SHA-1 password hash to the Have I Been Pwned range API (k-anonymity).
+          Your full password never leaves the device.
+        </li>
+        <li>
+          <strong>Vault import from URL / WebDAV / SFTP (optional):</strong>
+          connects only to addresses you enter, to download a <code>.kdbx</code>
+          onto this device. Credentials you type for those servers stay on device
+          for the session and are not sent to Lockwell.
+        </li>
+        <li>
+          <strong>Google Drive (optional):</strong> when you choose Google Drive
+          and sign in, Lockwell uses Google OAuth to request Drive access so you
+          can browse folders, open a <code>.kdbx</code>, and write your edits
+          back to that same Drive file when you save. Access tokens stay in the
+          device Keychain/Keystore. Lockwell does not send your vault to Lockwell
+          servers. You can disconnect anytime in the Drive browser.
+        </li>
+        <li>
+          <strong>Dropbox / OneDrive / iCloud (optional):</strong> you can open a
+          <code>.kdbx</code> through the system Files (or storage) picker when
+          those locations are available on your device. Lockwell copies the
+          chosen file locally. If you later connect Dropbox or OneDrive with
+          in-app sign-in, edits can be written back to that cloud file; tokens
+          stay on device.
+        </li>
+        <li>
+          <strong>Local network transfer (optional):</strong> briefly listens on
+          your Wi-Fi so another device can send a vault file directly to this
+          phone. Traffic stays on your local network.
+        </li>
+        <li>
+          <strong>Favicon fetch (optional):</strong> requests icons from URLs
+          derived from your entry websites.
+        </li>
+        <li>
+          <strong>Store payments:</strong> Apple / Google process the paid app
+          purchase and any tip payments; Lockwell does not receive card details.
+        </li>
+      </ul>
+      <p>Lockwell does not upload your vault to our servers.</p>
+
+      <h2>Third parties</h2>
+      <p>
+        Lockwell is an independent product and is not affiliated with Apple,
+        Google, or KeePass. All trademarks belong to their respective owners.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy:
+        <a href="mailto:yogendra.danwar@gmail.com">yogendra.danwar@gmail.com</a>
+      </p>
+
+      <h2>Deletion</h2>
+      <p>
+        Uninstalling the App removes locally stored vaults, PIN, and preferences
+        from the device (subject to platform backup behavior).
+      </p>
+    </main>
+
+    <footer class="foot">
+      <p><a href="../">← Lockwell</a></p>
+    </footer>
+  </body>
+</html>
