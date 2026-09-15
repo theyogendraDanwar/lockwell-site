@@ -6,9 +6,9 @@
     <title>Privacy Policy — Lockwell</title>
     <meta
       name="description"
-      content="Lockwell privacy policy. Your vault data stays on your device or storage you choose."
+      content="Lockwell privacy policy. Your vault data stays on your device or storage you choose. Google Drive optional sign-in disclosures."
     />
-    <link rel="canonical" href="https://theyogendradanwar.github.io/lockwell-site/privacy/" />
+    <link rel="canonical" href="https://lockwellvault.in/privacy/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,7 +28,7 @@
 
     <main class="doc">
       <h1>Privacy Policy</h1>
-      <p class="meta">Last updated: 2026-03-13</p>
+      <p class="meta">Last updated: 2026-09-15</p>
 
       <p>
         Lockwell ("the App") is a KeePass-compatible password manager. Your vault
@@ -80,31 +80,26 @@
           Your full password never leaves the device.
         </li>
         <li>
-          <strong>Vault import from URL / WebDAV / SFTP (optional):</strong>
-          connects only to addresses you enter, to download a <code>.kdbx</code>
-          onto this device. Credentials you type for those servers stay on device
-          for the session and are not sent to Lockwell.
+          <strong>Vault import from URL (optional):</strong>
+          connects only to the HTTPS address you enter, to download a <code>.kdbx</code>
+          onto this device. The link is not sent to Lockwell.
         </li>
         <li>
-          <strong>Google Drive (optional):</strong> when you choose Google Drive
-          and sign in, Lockwell uses Google OAuth to request Drive access so you
-          can browse folders, open a <code>.kdbx</code>, and write your edits
-          back to that same Drive file when you save. Access tokens stay in the
-          device Keychain/Keystore. Lockwell does not send your vault to Lockwell
-          servers. You can disconnect anytime in the Drive browser.
+          <strong>Google Drive (optional):</strong> see
+          <a href="#google-user-data">Google user data</a> below.
         </li>
         <li>
-          <strong>Dropbox / OneDrive / iCloud (optional):</strong> you can open a
-          <code>.kdbx</code> through the system Files (or storage) picker when
-          those locations are available on your device. Lockwell copies the
-          chosen file locally. If you later connect Dropbox or OneDrive with
-          in-app sign-in, edits can be written back to that cloud file; tokens
-          stay on device.
+          <strong>Dropbox (optional):</strong> when you choose Dropbox and sign
+          in, Lockwell uses Dropbox OAuth so you can browse folders, open a
+          <code>.kdbx</code>, create a vault in a folder you choose, and write
+          your edits back to that same Dropbox file when you save. Access tokens
+          stay in the device Keychain/Keystore. You can disconnect anytime in the
+          Dropbox browser. You can also open Dropbox via the system Files picker
+          (local copy only; no write-back unless you sign in).
         </li>
         <li>
-          <strong>Local network transfer (optional):</strong> briefly listens on
-          your Wi-Fi so another device can send a vault file directly to this
-          phone. Traffic stays on your local network.
+          <strong>iCloud (optional):</strong> on iOS you can open or place vaults
+          via Files → iCloud Drive (local working copy on device).
         </li>
         <li>
           <strong>Favicon fetch (optional):</strong> requests icons from URLs
@@ -116,6 +111,130 @@
         </li>
       </ul>
       <p>Lockwell does not upload your vault to our servers.</p>
+
+      <h2 id="google-user-data">Google user data</h2>
+      <p>
+        This section applies when you optionally sign in to Google Drive inside
+        Lockwell (Android / iOS). Signing in is never required to use Lockwell
+        with local vaults.
+      </p>
+
+      <h3>What Google user data is accessed</h3>
+      <p>
+        When you tap <strong>Sign in with Google</strong> for Drive, Lockwell
+        requests OAuth access to:
+      </p>
+      <ul>
+        <li>
+          <strong>Google account identity</strong> (email, basic profile) via
+          <code>openid</code>, <code>email</code>, and <code>profile</code> — to
+          identify your Google session and show which account is connected.
+        </li>
+        <li>
+          <strong>Google Drive files and folders that Lockwell creates or that
+          you open with Lockwell</strong> via
+          <code>https://www.googleapis.com/auth/drive.file</code> — to create a
+          Lockwell folder and <code>.kdbx</code> vaults, list those vaults,
+          download a vault to open it, and upload saves back to the same Drive
+          file.
+        </li>
+      </ul>
+      <p>
+        Lockwell does <strong>not</strong> request full Drive access
+        (<code>auth/drive</code>). It cannot list or read your entire Google
+        Drive, Gmail, Contacts, Calendar, Photos, or other Google products.
+      </p>
+      <p>
+        Typical Google user data processed on-device: Drive file ids/names for
+        vaults you manage with Lockwell, file content of those <code>.kdbx</code>
+        vaults (encrypted KeePass databases), and OAuth access/refresh tokens.
+      </p>
+
+      <h3>How Google user data is used</h3>
+      <p>Lockwell uses Google user data only to provide Drive features you choose:</p>
+      <ol>
+        <li>
+          <strong>Create</strong> a KeePass vault on Google Drive (file created
+          in your Lockwell Drive folder).
+        </li>
+        <li>
+          <strong>Open / download</strong> a Lockwell-managed <code>.kdbx</code>
+          from Drive onto this device.
+        </li>
+        <li>
+          <strong>Save / sync</strong> (write-back): when you edit entries and
+          save, Lockwell uploads the updated encrypted vault bytes to the
+          <strong>same</strong> Drive file id.
+        </li>
+        <li>
+          <strong>Conflict checks:</strong> optional metadata (modified time /
+          checksum) for that same file so Lockwell can warn if Drive changed
+          elsewhere.
+        </li>
+      </ol>
+      <p>
+        Google user data is <strong>not</strong> used for advertising, analytics,
+        credit scoring, or training AI/ML models. Lockwell does not use Google
+        Workspace APIs for AI features.
+      </p>
+
+      <h3>Sharing, transfer, and disclosure of Google user data</h3>
+      <ul>
+        <li>
+          Lockwell has <strong>no first-party backend</strong> that receives your
+          Google Drive vault contents or OAuth tokens.
+        </li>
+        <li>
+          Vault bytes and tokens stay on your device except when sent
+          <strong>directly to Google’s Drive API</strong> over HTTPS to perform
+          the create / download / upload you initiated.
+        </li>
+        <li>We do <strong>not</strong> sell Google user data.</li>
+        <li>
+          We do <strong>not</strong> share, transfer, or disclose Google user
+          data to other third parties, affiliates, or data brokers.
+        </li>
+        <li>
+          Disclosure may occur only if required by law (e.g. valid legal
+          process); we have no cloud copy of your vaults to produce beyond what
+          remains solely on your device / your Google account.
+        </li>
+      </ul>
+
+      <h3>Data protection for sensitive data</h3>
+      <ul>
+        <li>
+          <strong>Encryption at rest:</strong> vault credentials remain inside
+          KeePass <code>.kdbx</code> (user-controlled master password / key
+          file). App unlock PIN uses iOS Keychain / Android Keystore.
+        </li>
+        <li>
+          <strong>Encryption in transit:</strong> all Google API calls use
+          HTTPS/TLS.
+        </li>
+        <li>
+          <strong>Token storage:</strong> Google OAuth tokens are stored in the
+          device Keychain (iOS) or Keystore-backed secure storage (Android).
+        </li>
+        <li>
+          <strong>Least privilege:</strong> only <code>drive.file</code>
+          (per-file) Drive access, not full Drive.
+        </li>
+        <li>
+          <strong>User control:</strong> Disconnect Google in the Drive browser
+          clears the local session/tokens. Uninstalling removes local vaults,
+          PIN, and preferences (subject to platform backup). You can also revoke
+          Lockwell in your
+          <a href="https://myaccount.google.com/permissions">Google Account → Third-party access</a>.
+        </li>
+        <li>
+          <strong>Limited Use:</strong> Lockwell’s use of Google user data
+          complies with the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy"
+            >Google API Services User Data Policy</a
+          >, including the Limited Use requirements.
+        </li>
+      </ul>
 
       <h2>Third parties</h2>
       <p>
@@ -132,7 +251,9 @@
       <h2>Deletion</h2>
       <p>
         Uninstalling the App removes locally stored vaults, PIN, and preferences
-        from the device (subject to platform backup behavior).
+        from the device (subject to platform backup behavior). To remove Drive
+        files Lockwell created, delete them in Google Drive or revoke app access
+        as above.
       </p>
     </main>
 
