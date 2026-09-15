@@ -20,7 +20,7 @@
     }
     h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px; }
     p { color: #9aa7b5; margin: 0 0 20px; text-align: center; max-width: 28rem; line-height: 1.45; }
-    #status { color: #9aa7b5; margin-top: 12px; }
+    #status { color: #9aa7b5; margin-top: 12px; text-align: center; max-width: 28rem; }
     button {
       appearance: none;
       border: 0;
@@ -39,21 +39,24 @@
 </head>
 <body>
   <h1>Choose a KeePass vault</h1>
-  <p>Pick a <strong>.kdbx</strong> file from your Google Drive. Lockwell will open it and keep saves in sync.</p>
+  <p>Pick a <strong>.kdbx</strong> from Google Drive. Lockwell keeps saves synced with that file.</p>
   <button type="button" id="pick">Open Google Drive picker</button>
   <button type="button" id="cancel" class="secondary">Cancel</button>
   <p id="status">Loading…</p>
   <script>
 (function () {
   var RETURN = 'com.lockwell.app://drive-picker';
-  var hash = location.hash ? location.hash.slice(1) : '';
-  var params = new URLSearchParams(hash);
-  var token = params.get('access_token') || '';
-  var apiKey = params.get('api_key') || '';
-  var appId = params.get('app_id') || '375269897047';
-  // Drop secrets from the address bar after reading (fragment never hit the server).
+  var hashParams = new URLSearchParams(location.hash ? location.hash.slice(1) : '');
+  var queryParams = new URLSearchParams(location.search || '');
+  function param(name) {
+    return hashParams.get(name) || queryParams.get(name) || '';
+  }
+  var token = param('access_token');
+  var apiKey = param('api_key');
+  var appId = param('app_id') || '375269897047';
+  // Strip secrets from the address bar after reading.
   if (history.replaceState) {
-    history.replaceState(null, '', location.pathname + location.search);
+    history.replaceState(null, '', location.pathname);
   }
 
   var statusEl = document.getElementById('status');
@@ -61,8 +64,17 @@
     statusEl.textContent = msg;
     statusEl.className = isErr ? 'err' : '';
   }
+  function postNative(msg) {
+    try {
+      if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+        window.ReactNativeWebView.postMessage(JSON.stringify(msg));
+      }
+    } catch (e) {}
+  }
   function goBack(qs) {
-    window.location.href = RETURN + (qs ? ('?' + qs) : '');
+    var url = RETURN + (qs ? ('?' + qs) : '');
+    postNative({ type: 'redirect', url: url });
+    window.location.href = url;
   }
 
   document.getElementById('cancel').onclick = function () {
@@ -70,21 +82,17 @@
   };
 
   if (!token || !apiKey) {
-    setStatus('Open this page from Lockwell (Google Drive → Open existing vault).', true);
+    setStatus('Missing Google session. Close and open again from Lockwell.', true);
+    postNative({ type: 'error', message: 'missing_token' });
     document.getElementById('pick').disabled = true;
     return;
   }
-
-  setStatus('Ready — tap the button to browse Google Drive.');
 
   function onPicked(data) {
     if (data.action === google.picker.Action.PICKED && data.docs && data.docs[0]) {
       var d = data.docs[0];
       var name = d.name || 'vault.kdbx';
-      goBack(
-        'id=' + encodeURIComponent(d.id) +
-        '&name=' + encodeURIComponent(name)
-      );
+      goBack('id=' + encodeURIComponent(d.id) + '&name=' + encodeURIComponent(name));
     } else if (data.action === google.picker.Action.CANCEL) {
       goBack('cancel=1');
     }
@@ -92,24 +100,29 @@
 
   function createPicker() {
     try {
+      // OAuth token only — do not trigger Google account cookie UI.
       var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
         .setIncludeFolders(true)
         .setSelectFolderEnabled(false)
-        .setOwnedByMe(true)
         .setMode(google.picker.DocsViewMode.LIST);
       var picker = new google.picker.PickerBuilder()
         .addView(view)
+        .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .setOAuthToken(token)
         .setDeveloperKey(apiKey)
         .setAppId(appId)
-        .setOrigin(window.location.protocol + '//' + window.location.host)
+        .setOrigin(window.location.origin)
         .setCallback(onPicked)
         .setTitle('Choose a KeePass .kdbx')
+        .setSize(Math.min(window.innerWidth, 1051), Math.min(window.innerHeight - 40, 650))
         .build();
       picker.setVisible(true);
       setStatus('Pick your .kdbx vault…');
+      postNative({ type: 'ready' });
     } catch (e) {
-      setStatus((e && e.message) || 'Could not open Google Drive picker.', true);
+      var msg = (e && e.message) || 'Could not open Google Drive picker.';
+      setStatus(msg, true);
+      postNative({ type: 'error', message: msg });
     }
   }
 
@@ -118,10 +131,9 @@
     gapi.load('picker', { callback: createPicker });
   };
 
-  // Auto-open picker once scripts are ready.
   gapi.load('picker', {
     callback: function () {
-      setStatus('Ready — opening Google Drive…');
+      setStatus('Opening Google Drive…');
       createPicker();
     },
   });
