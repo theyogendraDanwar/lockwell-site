@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lockwell — Choose Drive vault</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f1419;
+      color: #e8eef4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px;
+      box-sizing: border-box;
+    }
+    h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px; }
+    p { color: #9aa7b5; margin: 0 0 20px; text-align: center; max-width: 28rem; line-height: 1.45; }
+    #status { color: #9aa7b5; margin-top: 12px; }
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #1a9b8e;
+      color: #fff;
+      cursor: pointer;
+    }
+    button.secondary { background: #24303a; margin-top: 10px; }
+    .err { color: #ff8a80; }
+  </style>
+  <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+  <h1>Choose a KeePass vault</h1>
+  <p>Pick a <strong>.kdbx</strong> file from your Google Drive. Lockwell will open it and keep saves in sync.</p>
+  <button type="button" id="pick">Open Google Drive picker</button>
+  <button type="button" id="cancel" class="secondary">Cancel</button>
+  <p id="status">Loading…</p>
+  <script>
+(function () {
+  var RETURN = 'com.lockwell.app://drive-picker';
+  var hash = location.hash ? location.hash.slice(1) : '';
+  var params = new URLSearchParams(hash);
+  var token = params.get('access_token') || '';
+  var apiKey = params.get('api_key') || '';
+  var appId = params.get('app_id') || '375269897047';
+  // Drop secrets from the address bar after reading (fragment never hit the server).
+  if (history.replaceState) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+
+  var statusEl = document.getElementById('status');
+  function setStatus(msg, isErr) {
+    statusEl.textContent = msg;
+    statusEl.className = isErr ? 'err' : '';
+  }
+  function goBack(qs) {
+    window.location.href = RETURN + (qs ? ('?' + qs) : '');
+  }
+
+  document.getElementById('cancel').onclick = function () {
+    goBack('cancel=1');
+  };
+
+  if (!token || !apiKey) {
+    setStatus('Open this page from Lockwell (Google Drive → Open existing vault).', true);
+    document.getElementById('pick').disabled = true;
+    return;
+  }
+
+  setStatus('Ready — tap the button to browse Google Drive.');
+
+  function onPicked(data) {
+    if (data.action === google.picker.Action.PICKED && data.docs && data.docs[0]) {
+      var d = data.docs[0];
+      var name = d.name || 'vault.kdbx';
+      goBack(
+        'id=' + encodeURIComponent(d.id) +
+        '&name=' + encodeURIComponent(name)
+      );
+    } else if (data.action === google.picker.Action.CANCEL) {
+      goBack('cancel=1');
+    }
+  }
+
+  function createPicker() {
+    try {
+      var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
+        .setIncludeFolders(true)
+        .setSelectFolderEnabled(false)
+        .setOwnedByMe(true)
+        .setMode(google.picker.DocsViewMode.LIST);
+      var picker = new google.picker.PickerBuilder()
+        .addView(view)
+        .setOAuthToken(token)
+        .setDeveloperKey(apiKey)
+        .setAppId(appId)
+        .setOrigin(window.location.protocol + '//' + window.location.host)
+        .setCallback(onPicked)
+        .setTitle('Choose a KeePass .kdbx')
+        .build();
+      picker.setVisible(true);
+      setStatus('Pick your .kdbx vault…');
+    } catch (e) {
+      setStatus((e && e.message) || 'Could not open Google Drive picker.', true);
+    }
+  }
+
+  document.getElementById('pick').onclick = function () {
+    setStatus('Opening Google Drive…');
+    gapi.load('picker', { callback: createPicker });
+  };
+
+  // Auto-open picker once scripts are ready.
+  gapi.load('picker', {
+    callback: function () {
+      setStatus('Ready — opening Google Drive…');
+      createPicker();
+    },
+  });
+})();
+  </script>
+</body>
+</html>
